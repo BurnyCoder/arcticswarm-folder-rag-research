@@ -22,7 +22,7 @@ Evaluation (details in the [preregistration](reports/preregistration.md)):
   - MultiHop-RAG: equal accuracy, with identical per-question outcomes.
   - SWE-QA: the swarm scored significantly **lower** under the strict rubric, at a much higher cost and latency (exact figures in the Results section below).
 - **Retrieval was not the bottleneck.** Both systems found the gold evidence files in almost every case.
-- **Metric finding.** MultiHop-RAG's official word-overlap metric is gameable: a constant answer string scores higher than any published system (figure in the Results section below). We replicated this, so we score a forced `FINAL ANSWER:` line instead.
+- **Metric finding.** MultiHop-RAG's official word-overlap metric is gameable: a constant answer string scores higher than the best published MultiHop-RAG results we found (figure in the Results section below; see the literature review). We replicated this, so we score a forced `FINAL ANSWER:` line instead.
 - **Engineering findings.** Stock ArcticSwarm:
   - crashes at import on native Windows
   - is rejected by Haiku 5.5's API (it sends `budget_tokens` thinking)
@@ -234,7 +234,7 @@ uv run python scripts/build_paper.py; uv run python scripts/build_site.py
 
 ## Limitations
 - **Tiny samples.** n = 10 per dataset per arm and a single run (the API has no seed). Most CIs are wide.
-- **Judge bias.** The LLM judge is from the same family as the agents. This affects all arms equally, but limits comparison with published numbers. The SWE-QA judge was GPT-5 in the paper.
+- **Judge bias.** The LLM judge is from the same family as the agents. This affects all arms equally, but limits comparison with published numbers. The SWE-QA v2 paper used Claude Sonnet 4.5 as judge, and its released script defaults to GPT-5.
 - **Contamination.** Both benchmarks predate the model's training data. The closed-book control is still to come.
 - **Soft network guard only.** Raw sockets could bypass the proxy.
 - **Budgets.** Below the paper's (900 s per question, 60 subagent turns). Low agent caps hit the time limit.

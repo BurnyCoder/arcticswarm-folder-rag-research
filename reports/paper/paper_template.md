@@ -106,7 +106,7 @@ The fork lives in the `ArcticSwarm/` submodule, branch `folder-rag`.
   - H3: Wilcoxon signed-rank test.
   - Holm correction over {H1, H3}.
   - Wilson and paired-bootstrap 95% CIs (10,000 resamples).
-- **Cost:** API list price × token usage, from the full LLM-call logs.
+- **Cost:** API list price × token usage, from ArcticSwarm's per-question token accounting at the ≤100K-prompt price card. This is cross-checked against the full LLM-call logs, which apply the >100K tier per call.
 
 # 4. Results
 
@@ -119,7 +119,7 @@ The fork lives in the `ArcticSwarm/` submodule, branch `folder-rag`.
 ## 4.1 Metric validity (no API calls)
 - The official MultiHop-RAG metric counts an answer as correct if any gold word appears in it. Under it, the constant string "yes no insufficient sam google" scores {{trivial_baselines.constant_hedge.official_overlap|pct1}} on all 2,556 queries. Answering each question type's majority answer scores {{trivial_baselines.majority_per_type.official_overlap|pct1}}. Under normalized exact match the same two strategies score {{trivial_baselines.constant_hedge.exact_match|pct1}} and {{trivial_baselines.majority_per_type.exact_match|pct1}}.
 - The official metric is therefore unusable as a primary metric.
-- On our sample the judge agreed with exact match on {{summary.M.judge_em_agreement|pct}} of M's MultiHop-RAG answers. The disagreements are mostly label-style answers, e.g. "yes" for a gold "Align".
+- On our sample the judge agreed with exact match on {{summary.M.judge_em_agreement|pct}} of M's MultiHop-RAG answers. The two disagreements are a label-style answer ("yes" for a gold "Align", correct per the judge) and a hedge ("Yes; No"), which the pre-registered yes/no prefix rule of exact match accepts and the judge rejects.
 
 ## 4.2 Swarm vs single agent
 **MultiHop-RAG.**

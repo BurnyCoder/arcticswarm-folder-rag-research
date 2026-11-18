@@ -33,9 +33,19 @@ Install and run [ArcticSwarm](https://github.com/Snowflake-AI-Research/ArcticSwa
 7. [x] Smoke test (M and B2 on 1 MultiHop-RAG and 1 SWE-QA question each). Cost: about $0.20–0.30 per question for M and about $0.005 for B2. N was fixed by the user at 20 per condition (Amendment 1).
 8. [x] Ran M (swarm) on all 20 questions, 16:06–16:56. All 5 folders exited with rc=0; there were 0 API errors in 3,704 calls.
 9. [x] Ran B2 (single agent) on the same 20 ids, 16:56–17:00. Judged, analyzed, pushed: [experiments/day1-main-vs-single-agent.md](experiments/day1-main-vs-single-agent.md).
-10. [ ] Reports, paper, README, results site. Fact-check.
-10b. [ ] Agent-count sweep (user request): swarm caps of 2, 4 and 8 subagents started 17:01 concurrently (prereg Amendment 2). Cap 32 (`M_cap32`) added at 18:42 at the user's request (Amendment 3). All within $50.
-11. Later days: B1, C1, C2, O, B3 (compute-matched voting), A1 (no code execution), plus a repeat run for variance.
+10. [x] Agent-count sweep (user request):
+    - Swarm caps 2/4/8 ran concurrently from 17:01 (Amendment 2). Cap 32 was added at 18:42 (Amendment 3). All arms finished by 19:27, with rc=0 for all 30 folder runs.
+    - Per-call API latency was unchanged by the concurrency.
+    - Low caps hit the 900 s budget. The 5 hard timeouts at cap 2 are scored as failures (prereg §6).
+    - Report: [experiments/day1-agent-sweep.md](experiments/day1-agent-sweep.md).
+11. [x] Reports, paper (PDF), README, summary, explorer (`docs/index.html`, also published as a private claude.ai page). All numbers are filled by script.
+    - Fact-check fixes: the SWE-QA judge model statement, the judge/EM disagreement description, the cost-method wording, and the softened published-comparison claim.
+12. [x] Private Hugging Face dataset `BurnyCoder/arcticswarm-folder-rag-results`, in a private collection.
+13. Day-1 spend:
+    - $24.64 in agent LLM calls (from the full call logs). This includes smoke tests ($0.48) and a `folderrag ask` test (<$0.01).
+    - Judge calls are well under $1.
+    - 111 of about 15k calls exceeded the 100K-token prompt tier.
+14. Later days: B1, C1, C2, O, B3 (compute-matched voting), A1 (no code execution), a repeat run for variance, a length-controlled SWE-QA follow-up, and requiring a corpus tool call before `prepare_report`.
 
 ## Decisions and why
 - **Model `claude-haiku-5-5`.** "Haiku" with no version means the current generation (Anthropic model table). Haiku 4.5 still works through the budget-thinking path.

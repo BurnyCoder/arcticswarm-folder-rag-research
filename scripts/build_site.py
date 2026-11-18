@@ -91,7 +91,7 @@ function detail(){
     const verdict = r.dataset==="MULTIHOPRAG" ? (r.judge_correct?"<span class=ok>correct</span>":"<span class=bad>incorrect</span>") : `<b>${r.sweqa_total}</b>/100 `+Object.entries(r.sweqa_scores||{}).map(([k,v])=>`<span class=pill>${k} ${v}</span>`).join("");
     const tools=Object.entries(r.tool_calls||{}).filter(([k,v])=>v).map(([k,v])=>`<span class=pill>${k} ${v}</span>`).join("");
     h+=`<div class=card><b>${label(r.condition)}</b>: ${verdict} · $${(r.cost_usd||0).toFixed(3)} · ${(r.duration_s||0).toFixed(0)} s · agents ${r.agents_spawned??(r.condition==="B2"?1:"–")}<div>${tools}</div>`+
-       `<div><b>FINAL ANSWER:</b> ${esc(r.final_answer)||"<i>(missing)</i>"}</div>`+(r.judge_reason?`<div class=muted>judge: ${esc(r.judge_reason)}</div>`:"")+
+       `<div><b>FINAL ANSWER:</b> ${esc(r.final_answer)||"<i>(missing)</i>"}</div>`+(r.failure_rule_applied?`<div class=bad>${esc(r.error)}: scored as failure (pre-registered rule)</div>`:"")+(r.judge_reason?`<div class=muted>judge: ${esc(r.judge_reason)}</div>`:"")+
        (full?`<pre>${esc(r.response)}</pre>`:`<details><summary>full response (${(r.response||"").length} chars)</summary><pre>${esc(r.response)}</pre></details>`)+`</div>`;
   }
   document.getElementById("detail").innerHTML=h;
@@ -111,7 +111,10 @@ def main() -> None:
     keep = ("condition", "id", "dataset", "folder", "stratum", "question", "answer", "response", "final_answer",
             "judge_correct", "judge_reason", "exact_match", "sweqa_total", "sweqa_scores", "cost_usd", "duration_s",
             "tool_calls", "agents_spawned", "evidence_recall")
-    rows = [{k: r.get(k) for k in keep} for r in map(json.loads, (res / "judged.jsonl").open(encoding="utf-8"))]
+    # Same rows as the analysis (pre-registered failure rule applied to errored cases).
+    from folderrag.analyze import load
+    keep = keep + ("error", "failure_rule_applied")
+    rows = [{k: r.get(k) for k in keep} for r in load(a.tag)]
     metrics = json.loads((res / "metrics.json").read_text(encoding="utf-8"))
     # json.dumps then neutralise "</" so embedded text can never close the <script> tag.
     page = PAGE.replace("__ROWS__", json.dumps(rows, ensure_ascii=False).replace("</", "<\\/")) \
