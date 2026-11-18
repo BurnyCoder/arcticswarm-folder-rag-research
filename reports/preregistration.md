@@ -105,3 +105,28 @@ The seed (`20261118`) and the stratified ordering are unchanged, and both condit
 - H1 and H3 are still tested as pre-registered.
 - Day-1 results are reported as **exploratory**: effect sizes, Wilson/bootstrap CIs, cost and qualitative trajectory analysis.
 - A null result must not be read as evidence of no effect.
+
+## Amendment 2 (2026-11-18, registered before any sweep run; the main run M had started, B2 had not)
+The user asked to test the optimal number of agents. This is added as an **exploratory sensitivity analysis**; no confirmatory hypothesis is attached to it.
+
+- **Knob.** `swarm.max_subagents`, the hard cap on spawned subagents. Tasks beyond the cap queue and are handed to freed workers.
+  - `swarm.max_teammates` was also considered. It is accepted by the code but is not used in dynamic mode, as verified in `swarm/tools.py` and `swarm/prompts.py`.
+- **Arms.**
+
+  | Arm | Agents |
+  |---|---|
+  | `M_cap2` | cap 2 |
+  | `M_cap4` | cap 4 |
+  | `M_cap8` | cap 8 |
+  | M | default cap 16 |
+  | B2 | single agent, one agent and no orchestration |
+
+  All other settings equal M. All arms use the same 20 question ids.
+- **Order.** Run after M and B2 (the user's order: main method, then baseline, then further experiments), within the $50/day cap.
+- **Reported per arm:**
+  - MultiHop-RAG judge accuracy with Wilson CI, and SWE-QA mean score with bootstrap CI
+  - $/question and median latency
+  - number of agents actually spawned (`swarm_teammates_spawned`)
+  - quality vs cap and quality vs cost curves
+- **Paired differences** against M are given with bootstrap CIs and **no significance claims**, since n=20 per arm. "Optimal" is read as the cheapest cap whose quality CI overlaps the best arm's. This is descriptive only.
+- We also report the relationship between the number of agents the orchestrator spawns naturally under M and correctness. This is correlational only.

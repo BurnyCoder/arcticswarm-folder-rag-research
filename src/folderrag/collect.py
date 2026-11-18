@@ -104,6 +104,7 @@ def collect_tag(tag: str) -> list[dict[str, Any]]:
                 "response": c.get("response_text", "") or "",
                 "error": c.get("error") or ("missing from report" if not c else ""),
                 "duration_s": c.get("duration_seconds"), "num_tool_calls": c.get("num_tool_calls"),
+                "agents_spawned": c.get("swarm_teammates_spawned"),
                 "tool_calls": tool_counts(c, run_dir / "trajectories" / f"{qid}.json"),
                 "tokens": tok, "cost_usd": round(case_cost(tok), 4),
                 "evidence_recall": evidence_recall(run_dir / "trajectories" / f"{qid}.json", q["gold_files"]),

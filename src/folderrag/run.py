@@ -41,6 +41,19 @@ def load_sample(path: Path = EVAL_DIR / "day1_sample.jsonl") -> list[dict]:
         return [json.loads(line) for line in fh]
 
 
+def resolve_condition(condition: str) -> tuple[list[Path], list[str]]:
+    """Config files + overrides for a condition id.
+
+    ``M`` = swarm (default cap ``swarm.max_subagents=16``), ``B2`` = single agent,
+    ``M_capN`` = swarm with at most N subagents (agent-count sweep, prereg Amendment 2).
+    """
+    if condition in CONFIGS:
+        return CONFIGS[condition], []
+    if condition.startswith("M_cap") and condition[5:].isdigit():
+        return CONFIGS["M"], [f"swarm.max_subagents={int(condition[5:])}"]
+    raise ValueError(f"unknown condition {condition!r}")
+
+
 def run_folder(condition: str, folder: str, rows: list[dict], tag: str, extra: list[str] | None = None) -> Path:
     """Run one condition on one folder's rows; returns the ArcticSwarm output dir."""
     ts = dt.datetime.now().strftime("%Y%m%d_%H%M%S")
@@ -49,12 +62,15 @@ def run_folder(condition: str, folder: str, rows: list[dict], tag: str, extra: l
     csv_path = RUNS_DIR / tag / condition / f"{name}.csv"
     write_arcticswarm_csv(rows, csv_path, rows[0]["dataset"])
     src = FOLDERS_DIR / folder
-    dest = f"{SANDBOX_CORPUS_ROOT}/{folder}"
+    # Per-run sandbox copy, so concurrent runs never clobber each other's corpus.
+    dest = f"{SANDBOX_CORPUS_ROOT}/{tag}/{condition}/{folder}"
     sandbox.sync_corpus(src, dest)  # fresh, hash-verified copy for this run
 
+    configs, cond_overrides = resolve_condition(condition)
     cmd = [str(REPO / ".venv/Scripts/arcticswarm-eval")]
-    for c in CONFIGS[condition]:
+    for c in configs:
         cmd += ["-c", str(c)]
+    cmd += cond_overrides
     cmd += [
         f"web.corpus_local_path={src}",
         f"web.folder_index_dir={INDEX_DIR}",

@@ -39,6 +39,7 @@ Install and run [ArcticSwarm](https://github.com/Snowflake-AI-Research/ArcticSwa
 8. [ ] Run M (swarm) on MultiHop-RAG, then SWE-QA. Judge, analyze, push.
 9. [ ] Run B2 (single agent) on the same ids. Judge, analyze, push.
 10. [ ] Reports, paper, README, results site. Fact-check.
+10b. [ ] Agent-count sweep (user request): swarm caps of 2, 4 and 8 subagents (`M_cap2`, `M_cap4`, `M_cap8`) after M and B2, within $50 (prereg Amendment 2).
 11. Later days: B1, C1, C2, O, B3 (compute-matched voting), A1 (no code execution), plus a repeat run for variance.
 
 ## Decisions and why

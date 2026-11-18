@@ -23,7 +23,7 @@ def main(argv: list[str] | None = None) -> None:
     sub.add_parser("sandbox")
     sub.add_parser("prepare")
     r = sub.add_parser("run")
-    r.add_argument("condition", choices=["M", "B2"])
+    r.add_argument("condition", help="M | B2 | M_capN (swarm with at most N subagents)")
     r.add_argument("--tag", default="day1")
     r.add_argument("--limit", type=int, default=None, help="first K questions per folder (smoke tests)")
     r.add_argument("--folders", nargs="*", default=None)
