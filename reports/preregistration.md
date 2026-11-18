@@ -93,3 +93,15 @@ The user constrained the run order: main method first, then baselines, then abla
 - **Different settings from the paper:** BM25 instead of dense retrieval; lower budgets than the paper.
 - **Soft network guard only.**
 - **Unmatched compute:** M uses more compute than B2. Cost is therefore reported, and B3 (compute-matched voting) is scheduled.
+
+## Amendment 1 (2026-11-18, before any evaluation question was run)
+The user set the sample to **20 questions per condition**:
+- **10 MultiHop-RAG questions**, using the proportional largest-remainder allocation over question types: inference 3, comparison 4, temporal 2, null 1.
+- **10 SWE-QA questions:** requests 3, flask 3, pytest 2, django 2.
+
+The seed (`20261118`) and the stratified ordering are unchanged, and both conditions (M and B2) use the same ids.
+
+**Consequence for the analysis.** With n=10 per dataset, the McNemar and Wilcoxon tests have very low power: even a 30-point accuracy difference is unlikely to reach p<0.05.
+- H1 and H3 are still tested as pre-registered.
+- Day-1 results are reported as **exploratory**: effect sizes, Wilson/bootstrap CIs, cost and qualitative trajectory analysis.
+- A null result must not be read as evidence of no effect.

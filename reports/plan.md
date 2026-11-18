@@ -35,7 +35,7 @@ Install and run [ArcticSwarm](https://github.com/Snowflake-AI-Research/ArcticSwa
    - [ ] LLM call log.
    - [ ] Tests.
 6. [ ] Harness: dataset builders, run wrapper, judge, analysis, CLI.
-7. [ ] Smoke test (≤3 questions per dataset per condition), measure cost, fix N under the $50 budget.
+7. [ ] Smoke test (≤3 questions per dataset per condition) and cost check. N fixed by the user at 20 per condition (10 MultiHop-RAG + 10 SWE-QA; preregistration Amendment 1).
 8. [ ] Run M (swarm) on MultiHop-RAG, then SWE-QA. Judge, analyze, push.
 9. [ ] Run B2 (single agent) on the same ids. Judge, analyze, push.
 10. [ ] Reports, paper, README, results site. Fact-check.
