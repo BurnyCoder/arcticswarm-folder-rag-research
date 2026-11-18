@@ -34,7 +34,7 @@ Install and run [ArcticSwarm](https://github.com/Snowflake-AI-Research/ArcticSwa
 8. [x] Ran M (swarm) on all 20 questions, 16:06–16:56. All 5 folders exited with rc=0; there were 0 API errors in 3,704 calls.
 9. [x] Ran B2 (single agent) on the same 20 ids, 16:56–17:00. Judged, analyzed, pushed: [experiments/day1-main-vs-single-agent.md](experiments/day1-main-vs-single-agent.md).
 10. [ ] Reports, paper, README, results site. Fact-check.
-10b. [ ] Agent-count sweep (user request): swarm caps of 2, 4 and 8 subagents (`M_cap2`, `M_cap4`, `M_cap8`), started 17:01 concurrently, within $50 (prereg Amendment 2).
+10b. [ ] Agent-count sweep (user request): swarm caps of 2, 4 and 8 subagents started 17:01 concurrently (prereg Amendment 2). Cap 32 (`M_cap32`) added at 18:42 at the user's request (Amendment 3). All within $50.
 11. Later days: B1, C1, C2, O, B3 (compute-matched voting), A1 (no code execution), plus a repeat run for variance.
 
 ## Decisions and why

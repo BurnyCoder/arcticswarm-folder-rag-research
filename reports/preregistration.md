@@ -130,3 +130,8 @@ The user asked to test the optimal number of agents. This is added as an **explo
   - quality vs cap and quality vs cost curves
 - **Paired differences** against M are given with bootstrap CIs and **no significance claims**, since n=20 per arm. "Optimal" is read as the cheapest cap whose quality CI overlaps the best arm's. This is descriptive only.
 - We also report the relationship between the number of agents the orchestrator spawns naturally under M and correctness. This is correlational only.
+
+## Amendment 3 (2026-11-18 18:42, before this arm ran)
+The user asked to also try a cap of 32 subagents. A fifth sweep arm, `M_cap32` (`swarm.max_subagents=32`), is added. It has the same 20 ids, the same settings and the same exploratory, descriptive analysis as Amendment 2.
+
+Expectation, written before running: under M (cap 16) the orchestrator spawned about 6.7 agents per question, so the cap of 16 rarely bound. Cap 32 is therefore expected to behave much like M unless the orchestrator plans more tasks when more agents are available.
