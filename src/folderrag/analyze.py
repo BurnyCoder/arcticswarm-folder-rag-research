@@ -98,8 +98,23 @@ def holm(pvals: dict[str, float]) -> dict[str, float]:
 
 
 def load(tag: str) -> list[dict[str, Any]]:
+    """Judged rows with the pre-registered failure rule applied (prereg §6).
+
+    A case that errored (incl. a hard timeout where even the swarm's wrap-up phase
+    expired) is scored incorrect / 0 regardless of any partial report the judge saw.
+    """
+    rows = []
     with (RESULTS_DIR / tag / "judged.jsonl").open(encoding="utf-8") as fh:
-        return [json.loads(line) for line in fh]
+        for line in fh:
+            r = json.loads(line)
+            if r.get("error"):
+                r["judge_correct"] = False
+                r["exact_match"] = False
+                r["official_overlap"] = False
+                r["sweqa_total"] = 0
+                r["failure_rule_applied"] = True
+            rows.append(r)
+    return rows
 
 
 def trivial_baselines() -> dict[str, Any]:
@@ -293,6 +308,8 @@ def figures(rows: list[dict[str, Any]], summary: dict[str, Any], out: Path) -> N
         ax2 = ax.twinx(); ax2.plot(caps, spawned, marker="^", color="grey", label="agents spawned / question")
         ax.set_xscale("log", base=2); ax.set_xticks(caps, [str(x) for x in caps]); ax.set_ylim(bottom=0); ax2.set_ylim(bottom=0)
         ax.set_xlabel("max agents"); ax.set_ylabel("$ per question"); ax2.set_ylabel("agents actually spawned")
+        h1, l1 = ax.get_legend_handles_labels(); h2, l2 = ax2.get_legend_handles_labels()
+        ax.legend(h1 + h2, l1 + l2, fontsize=8, loc="upper left")
         ax.set_title("Cost and agents used vs cap")
         fig.tight_layout(); fig.savefig(out / "fig_agent_sweep.png", dpi=150); plt.close(fig)
 

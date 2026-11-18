@@ -4,7 +4,7 @@
     folderrag prepare            # build corpora folders + the day-1 sample
     folderrag run M [--tag day1] [--limit K] [--folders a b]   # ArcticSwarm swarm
     folderrag run B2 ...                                       # single-agent baseline
-    folderrag ask "question" --folder D:\docs [--mode M|B2]   # any folder of your own
+    folderrag ask "question" --folder <path> [--mode M|B2]   # any folder of your own
     folderrag judge --tag day1   # unified judge for every condition found
     folderrag analyze --tag day1 # metrics, tests, tables, figures (results/)
 """

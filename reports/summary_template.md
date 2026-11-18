@@ -10,6 +10,8 @@ On 20 test questions, the multi-agent swarm was **not more accurate** than one a
 - **Code questions:** under a strict grading rubric the swarm was **worse** ({{summary.M.swe_mean|f1}} vs {{summary.B2.swe_mean|f1}} out of 100), partly because its answers were about five times longer.
 - **Cost:** the swarm cost about {{ratios.cost_M_over_B2|f1}}× more per question.
 
+We also varied how many agents the swarm may use: 2, 4, 8, 16 or 32. No setting beat the single agent. With too few agents (2–4) the swarm mostly ran out of time. With more than about 8 nothing changed, because the orchestrator only uses about 6–7 agents anyway.
+
 With only 10 questions per dataset these results are preliminary.
 
 ## Experiments
@@ -17,7 +19,7 @@ With only 10 questions per dataset these results are preliminary.
 | Id | What | Agents (max) | Questions | Status | Report |
 |---|---|---|---|---|---|
 | day1-A | ArcticSwarm swarm (M) vs single agent (B2) | 16 vs 1 | 20 paired | done | [day1-main-vs-single-agent.md](experiments/day1-main-vs-single-agent.md) |
-| day1-B | Agent-count sweep: swarm cap 2 / 4 / 8 (+ M = 16, B2 = 1) | 1–16 | 20 paired | see report | [day1-agent-sweep.md](experiments/day1-agent-sweep.md) |
+| day1-B | Agent-count sweep: swarm cap 2 / 4 / 8 / 32 (+ M = 16, B2 = 1) | 1–32 | 20 paired | done | [day1-agent-sweep.md](experiments/day1-agent-sweep.md) |
 | later | B1 BM25 one-shot RAG, C1 closed-book, C2 random chunks, O oracle, B3 compute-matched voting, A1 no code execution, repeat runs | – | – | postponed (user: one main method + one baseline per day, $50/day) | [preregistration.md](preregistration.md) |
 
 ## Systems compared ("networks" table)
