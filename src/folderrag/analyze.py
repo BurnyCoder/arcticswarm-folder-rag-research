@@ -146,10 +146,26 @@ def summarize(rows: list[dict[str, Any]]) -> dict[str, Any]:
             "agents_spawned_mean": (float(np.mean([r["agents_spawned"] for r in rc if r.get("agents_spawned") is not None]))
                                     if any(r.get("agents_spawned") is not None for r in rc) else None),
             "errors": sum(1 for r in rc if r.get("error")),
+            # Exploratory (post hoc): answer length and SWE-QA rubric dimensions.
+            "resp_chars_median_mhr": float(np.median([len(r["response"]) for r in mhr])) if mhr else None,
+            "resp_chars_median_swe": float(np.median([len(r["response"]) for r in swe])) if swe else None,
+            "swe_dims": ({k: float(np.mean([r["sweqa_scores"].get(k, 0) for r in swe]))
+                          for k in ("correctness", "completeness", "relevance", "clarity", "reasoning")} if swe else None),
+            "no_tool_call_cases": sum(1 for r in rc if not r.get("tool_calls") or not any(
+                (r["tool_calls"] or {}).get(t) for t in ("web_search", "web_fetch", "bash", "python_execute"))),
             "missing_final_answer": sum(1 for r in mhr if not r.get("final_answer")),
             "judge_em_agreement": float(np.mean([r["judge_correct"] == r["exact_match"] for r in mhr])) if mhr else None,
         }
     return out
+
+
+def length_vs_score(rows: list[dict[str, Any]]) -> dict[str, Any]:
+    """Exploratory: Spearman correlation of SWE-QA answer length with rubric score."""
+    sw = [r for r in rows if r["dataset"] == "SWEQA"]
+    if len(sw) < 3:
+        return {}
+    rho = stats.spearmanr([len(r["response"]) for r in sw], [r["sweqa_total"] for r in sw])
+    return {"n": len(sw), "spearman_rho": float(rho.statistic), "p": float(rho.pvalue)}
 
 
 def paired_tests(rows: list[dict[str, Any]], a: str = "M", b: str = "B2") -> dict[str, Any]:
@@ -187,7 +203,7 @@ def tables_md(summary: dict[str, Any], tests: dict[str, Any], t0: dict[str, Any]
              "|---|---|---|---|---|---|---|---|---|---|---|---|---|"]
     for cond, s in summary.items():
         lines.append(
-            f"| {label(cond)} | {agent_cap(cond)} | {s['agents_spawned_mean'] if s['agents_spawned_mean'] is not None else '–'} | "
+            f"| {label(cond)} | {agent_cap(cond)} | {f"{s['agents_spawned_mean']:.1f}" if s['agents_spawned_mean'] is not None else '–'} | "
             f"{s['mhr_judge_acc']:.0%} {_fmt_ci(s['mhr_judge_ci'])} (n={s['n_mhr']}) | "
             f"{s['mhr_em_acc']:.0%} | {s['mhr_official_overlap']:.0%} | "
             f"{(s['mhr_evidence_recall'] or 0):.0%} | {s['swe_mean']:.1f} {_fmt_ci(s['swe_ci'], False)} (n={s['n_swe']}) | "
@@ -197,6 +213,14 @@ def tables_md(summary: dict[str, Any], tests: dict[str, Any], t0: dict[str, Any]
               "| Trivial answer | official word-overlap metric | normalized EM |", "|---|---|---|"]
     for name in ("majority_per_type", "constant_hedge"):
         lines.append(f"| {name} | {t0[name]['official_overlap']:.1%} | {t0[name]['exact_match']:.1%} |")
+    lines += ["", "Exploratory (post hoc): answer length and SWE-QA rubric dimensions (mean, 1-20 each):", "",
+              "| Condition | median answer chars (MHR / SWE-QA) | correctness | completeness | relevance | clarity | reasoning | cases with no search/code tool call |",
+              "|---|---|---|---|---|---|---|---|"]
+    for cond, s in summary.items():
+        d = s.get("swe_dims") or {}
+        lines.append(f"| {label(cond)} | {s['resp_chars_median_mhr']:.0f} / {s['resp_chars_median_swe']:.0f} | "
+                     + " | ".join(f"{d.get(k, float('nan')):.1f}" for k in ("correctness", "completeness", "relevance", "clarity", "reasoning"))
+                     + f" | {s['no_tool_call_cases']} |")
     lines += ["", "Pre-registered paired tests (M vs B2, Holm across H1/H3):", "",
               "| Hypothesis | difference (M − B2) | 95% bootstrap CI | p | p (Holm) | supported |", "|---|---|---|---|---|---|"]
     for h, hname, pct in (("H1", "MultiHop-RAG accuracy", True), ("H3", "SWE-QA score", False)):
@@ -291,7 +315,8 @@ def analyze_tag(tag: str) -> dict[str, Any]:
     # Exploratory sweep (prereg Amendment 2): paired differences vs M, CIs only.
     sweep = {c: paired_tests(rows, a=c, b="M") for c in summary if c.startswith("M_cap") and "M" in summary}
     t0 = trivial_baselines()
-    metrics = {"summary": summary, "tests": tests, "sweep_vs_M": sweep, "trivial_baselines": t0}
+    metrics = {"summary": summary, "tests": tests, "sweep_vs_M": sweep, "trivial_baselines": t0,
+               "exploratory_length_vs_score": length_vs_score(rows)}
     (out / "metrics.json").write_text(json.dumps(metrics, indent=2, default=float), encoding="utf-8")
     (out / "tables.md").write_text(tables_md(summary, tests, t0), encoding="utf-8")
     if summary:

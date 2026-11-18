@@ -1,0 +1,126 @@
+{
+  "summary": {
+    "B2": {
+      "n_mhr": 10,
+      "mhr_judge_acc": 0.7,
+      "mhr_judge_ci": [
+        0.3967781453459709,
+        0.892208733443606
+      ],
+      "mhr_em_acc": 0.7,
+      "mhr_official_overlap": 0.7,
+      "mhr_evidence_recall": 0.9351851851851851,
+      "n_swe": 10,
+      "swe_mean": 65.9,
+      "swe_ci": [
+        61.1,
+        71.4
+      ],
+      "cost_usd_total": 0.106,
+      "cost_usd_per_q": 0.0053,
+      "latency_s_median": 16.015,
+      "tool_calls_mean": 7.25,
+      "code_tool_calls_mean": 4.15,
+      "agents_spawned_mean": null,
+      "errors": 0,
+      "resp_chars_median_mhr": 1868.5,
+      "resp_chars_median_swe": 3200.5,
+      "swe_dims": {
+        "correctness": 12.6,
+        "completeness": 11.3,
+        "relevance": 13.3,
+        "clarity": 14.8,
+        "reasoning": 13.9
+      },
+      "no_tool_call_cases": 0,
+      "missing_final_answer": 0,
+      "judge_em_agreement": 0.8
+    },
+    "M": {
+      "n_mhr": 10,
+      "mhr_judge_acc": 0.7,
+      "mhr_judge_ci": [
+        0.3967781453459709,
+        0.892208733443606
+      ],
+      "mhr_em_acc": 0.7,
+      "mhr_official_overlap": 0.9,
+      "mhr_evidence_recall": 1.0,
+      "n_swe": 10,
+      "swe_mean": 50.1,
+      "swe_ci": [
+        43.0,
+        57.0
+      ],
+      "cost_usd_total": 5.74,
+      "cost_usd_per_q": 0.287,
+      "latency_s_median": 317.26,
+      "tool_calls_mean": 116.95,
+      "code_tool_calls_mean": 45.65,
+      "agents_spawned_mean": 6.684210526315789,
+      "errors": 0,
+      "resp_chars_median_mhr": 16355.0,
+      "resp_chars_median_swe": 16971.5,
+      "swe_dims": {
+        "correctness": 10.8,
+        "completeness": 9.4,
+        "relevance": 9.3,
+        "clarity": 9.8,
+        "reasoning": 10.8
+      },
+      "no_tool_call_cases": 1,
+      "missing_final_answer": 0,
+      "judge_em_agreement": 0.8
+    }
+  },
+  "tests": {
+    "n_paired_mhr": 10,
+    "n_paired_swe": 10,
+    "H1": {
+      "x_only": 0,
+      "y_only": 0,
+      "p": 1.0,
+      "diff": 0.0,
+      "ci": [
+        0.0,
+        0.0
+      ],
+      "p_holm": 1.0,
+      "supported": false
+    },
+    "H3": {
+      "p": 0.00390625,
+      "diff": -15.8,
+      "ci": [
+        -20.5,
+        -10.7
+      ],
+      "p_holm": 0.0078125,
+      "supported": false
+    }
+  },
+  "sweep_vs_M": {},
+  "trivial_baselines": {
+    "majority_per_type": {
+      "official_overlap": 0.5539906103286385,
+      "exact_match": 0.5312989045383412,
+      "n": 2556
+    },
+    "constant_hedge": {
+      "official_overlap": 0.8564162754303599,
+      "exact_match": 0.3059467918622848,
+      "n": 2556
+    },
+    "majority_answers": {
+      "comparison_query": "yes",
+      "null_query": "insufficient information",
+      "inference_query": "sam bankman-fried",
+      "temporal_query": "yes"
+    }
+  },
+  "exploratory_length_vs_score": {
+    "n": 20,
+    "spearman_rho": -0.5442913782307871,
+    "p": 0.013096566801802744
+  }
+}
