@@ -57,13 +57,14 @@ def resolve_condition(condition: str) -> tuple[list[Path], list[str]]:
 def run_folder(condition: str, folder: str, rows: list[dict], tag: str, extra: list[str] | None = None) -> Path:
     """Run one condition on one folder's rows; returns the ArcticSwarm output dir."""
     ts = dt.datetime.now().strftime("%Y%m%d_%H%M%S")
-    name = folder.replace("/", "__")
+    is_abs = Path(folder).is_absolute()  # any user folder (folderrag ask) vs a prepared benchmark folder
+    src = Path(folder) if is_abs else FOLDERS_DIR / folder
+    name = src.name if is_abs else folder.replace("/", "__")
     out_dir = RUNS_DIR / tag / condition / name
     csv_path = RUNS_DIR / tag / condition / f"{name}.csv"
     write_arcticswarm_csv(rows, csv_path, rows[0]["dataset"])
-    src = FOLDERS_DIR / folder
     # Per-run sandbox copy, so concurrent runs never clobber each other's corpus.
-    dest = f"{SANDBOX_CORPUS_ROOT}/{tag}/{condition}/{folder}"
+    dest = f"{SANDBOX_CORPUS_ROOT}/{tag}/{condition}/{name if is_abs else folder}"
     sandbox.sync_corpus(src, dest)  # fresh, hash-verified copy for this run
 
     configs, cond_overrides = resolve_condition(condition)
@@ -124,3 +125,19 @@ def run_condition(condition: str, tag: str = "day1", limit_per_folder: int | Non
         if rows:
             outs.append(run_folder(condition, folder, rows, tag, extra))
     return outs
+
+
+def ask(question: str, folder: str, condition: str = "M", tag: str = "ask") -> str:
+    """Answer one question over ANY local folder with the swarm (M) or single agent (B2).
+
+    Uses exactly the evaluated path (arcticswarm-eval with a one-row CSV), so the
+    sandbox, BM25 index, logging and citations behave as in the experiments.
+    """
+    from folderrag.datasets import FORMAT_GENERIC
+    qid = "ask_" + dt.datetime.now().strftime("%Y%m%d_%H%M%S")
+    root = str(Path(folder).resolve())
+    rows = [{"id": qid, "dataset": "ASK", "prompt": question + FORMAT_GENERIC, "answer": "(no reference)", "folder": root}]
+    out = run_folder(condition, root, rows, tag)
+    report = json.loads((out / "report.json").read_text(encoding="utf-8"))
+    case = next(c for c in report["per_case"] if c.get("conv_id") == qid)
+    return case.get("response_text", "")

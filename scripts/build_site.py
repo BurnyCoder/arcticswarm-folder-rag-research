@@ -105,6 +105,7 @@ summary(); chart(); questions();
 def main() -> None:
     ap = argparse.ArgumentParser()
     ap.add_argument("--tag", default="day1")
+    ap.add_argument("--split", default="", help="also write <dir>/index.html + <dir>/data.json (data fetched, for hosting)")
     a = ap.parse_args()
     res = ROOT / "results" / a.tag
     keep = ("condition", "id", "dataset", "folder", "stratum", "question", "answer", "response", "final_answer",
@@ -118,6 +119,18 @@ def main() -> None:
     out = ROOT / "docs" / "index.html"
     out.parent.mkdir(exist_ok=True)
     out.write_text(page, encoding="utf-8")
+    if a.split:
+        # Hosted variant: data beside the page as data.json, loaded with fetch().
+        d = Path(a.split)
+        d.mkdir(parents=True, exist_ok=True)
+        (d / "data.json").write_text(json.dumps({"rows": rows, "metrics": metrics}, ensure_ascii=False, default=float),
+                                     encoding="utf-8")
+        hosted = PAGE.replace("const ROWS = __ROWS__;", "let ROWS = [];").replace("const METRICS = __METRICS__;", "let METRICS = {summary:{}};")
+        init = "summary(); chart(); questions();"
+        hosted = hosted.replace(init, "fetch('data.json').then(r=>r.json()).then(d=>{ROWS=d.rows; METRICS=d.metrics; "
+                                      "conds.splice(0, conds.length, ...Object.keys(METRICS.summary).sort((a,b)=>cap(a)-cap(b))); " + init + "});")
+        (d / "index.html").write_text(hosted, encoding="utf-8")
+        print("hosted variant:", d)
     print(out, f"{len(page)/1e6:.1f} MB", html.escape("ok"))
 
 

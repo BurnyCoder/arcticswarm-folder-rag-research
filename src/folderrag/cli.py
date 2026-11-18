@@ -4,6 +4,7 @@
     folderrag prepare            # build corpora folders + the day-1 sample
     folderrag run M [--tag day1] [--limit K] [--folders a b]   # ArcticSwarm swarm
     folderrag run B2 ...                                       # single-agent baseline
+    folderrag ask "question" --folder D:\docs [--mode M|B2]   # any folder of your own
     folderrag judge --tag day1   # unified judge for every condition found
     folderrag analyze --tag day1 # metrics, tests, tables, figures (results/)
 """
@@ -27,6 +28,10 @@ def main(argv: list[str] | None = None) -> None:
     r.add_argument("--tag", default="day1")
     r.add_argument("--limit", type=int, default=None, help="first K questions per folder (smoke tests)")
     r.add_argument("--folders", nargs="*", default=None)
+    q = sub.add_parser("ask", help="answer one question over any local folder")
+    q.add_argument("question")
+    q.add_argument("--folder", required=True)
+    q.add_argument("--mode", default="M", help="M (swarm, default) | B2 (single agent, ~50x cheaper) | M_capN")
     for name in ("judge", "analyze"):
         p = sub.add_parser(name)
         p.add_argument("--tag", default="day1")
@@ -42,6 +47,10 @@ def main(argv: list[str] | None = None) -> None:
     elif a.cmd == "run":
         from folderrag.run import run_condition
         run_condition(a.condition, tag=a.tag, limit_per_folder=a.limit, folders=a.folders)
+    elif a.cmd == "ask":
+        from folderrag.run import ask
+        answer = ask(a.question, a.folder, a.mode)
+        print("\n===== ANSWER =====\n" + answer)
     elif a.cmd == "judge":
         from folderrag.collect import judge_tag
         judge_tag(a.tag)

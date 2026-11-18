@@ -47,6 +47,8 @@ def ordered(conds) -> list[str]:
     return sorted(conds, key=agent_cap)
 
 
+TIME_LIMIT_S = 900  # eval.timeout in conf/bench/folder_rag.yaml
+
 PALETTE = ["#e07b39", "#9ecae1", "#6baed6", "#3182bd", "#2a6fdb", "#08519c"]
 
 
@@ -146,6 +148,9 @@ def summarize(rows: list[dict[str, Any]]) -> dict[str, Any]:
             "agents_spawned_mean": (float(np.mean([r["agents_spawned"] for r in rc if r.get("agents_spawned") is not None]))
                                     if any(r.get("agents_spawned") is not None for r in rc) else None),
             "errors": sum(1 for r in rc if r.get("error")),
+            # Cases that used up the per-question wall-clock budget (eval.timeout = 900 s in
+            # ArcticSwarm/conf/bench/folder_rag.yaml; swarms then get a 300 s wrap-up).
+            "hit_time_limit": sum(1 for r in rc if (r.get("duration_s") or 0) >= TIME_LIMIT_S),
             # Exploratory (post hoc): answer length and SWE-QA rubric dimensions.
             "resp_chars_median_mhr": float(np.median([len(r["response"]) for r in mhr])) if mhr else None,
             "resp_chars_median_swe": float(np.median([len(r["response"]) for r in swe])) if swe else None,
@@ -199,8 +204,8 @@ def _fmt_ci(ci: Any, pct: bool = True) -> str:
 
 
 def tables_md(summary: dict[str, Any], tests: dict[str, Any], t0: dict[str, Any]) -> str:
-    lines = ["| Condition | max agents | agents spawned / q | MultiHop-RAG acc. (judge) [95% CI] | EM | official overlap | evidence recall | SWE-QA score /100 [95% CI] | $/question | median latency (s) | tool calls / q | bash+python / q | errors |",
-             "|---|---|---|---|---|---|---|---|---|---|---|---|---|"]
+    lines = ["| Condition | max agents | agents spawned / q | MultiHop-RAG acc. (judge) [95% CI] | EM | official overlap | evidence recall | SWE-QA score /100 [95% CI] | $/question | median latency (s) | tool calls / q | bash+python / q | errors | hit 900 s limit |",
+             "|---|---|---|---|---|---|---|---|---|---|---|---|---|---|"]
     for cond, s in summary.items():
         lines.append(
             f"| {label(cond)} | {agent_cap(cond)} | {f"{s['agents_spawned_mean']:.1f}" if s['agents_spawned_mean'] is not None else '–'} | "
@@ -208,7 +213,7 @@ def tables_md(summary: dict[str, Any], tests: dict[str, Any], t0: dict[str, Any]
             f"{s['mhr_em_acc']:.0%} | {s['mhr_official_overlap']:.0%} | "
             f"{(s['mhr_evidence_recall'] or 0):.0%} | {s['swe_mean']:.1f} {_fmt_ci(s['swe_ci'], False)} (n={s['n_swe']}) | "
             f"{s['cost_usd_per_q']:.3f} | {s['latency_s_median']:.0f} | {s['tool_calls_mean']:.1f} | "
-            f"{s['code_tool_calls_mean']:.1f} | {s['errors']} |")
+            f"{s['code_tool_calls_mean']:.1f} | {s['errors']} | {s['hit_time_limit']} |")
     lines += ["", f"T0 trivial baselines on all {t0['majority_per_type']['n']} MultiHop-RAG queries (no API calls):", "",
               "| Trivial answer | official word-overlap metric | normalized EM |", "|---|---|---|"]
     for name in ("majority_per_type", "constant_hedge"):

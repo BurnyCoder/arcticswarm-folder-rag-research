@@ -115,9 +115,27 @@ def collect_tag(tag: str) -> list[dict[str, Any]]:
 
 
 def judge_tag(tag: str) -> Path:
+    """Judge every collected row; reuse earlier verdicts for unchanged (condition, id, response).
+
+    Reuse keeps verdicts stable across re-runs of this command (the judge is stochastic)
+    and avoids paying twice; any changed response is judged afresh.
+    """
     rows = collect_tag(tag)
-    judged = judge_rows(rows)
     out = RESULTS_DIR / tag / "judged.jsonl"
+    cache: dict[tuple, dict] = {}
+    if out.exists():
+        for line in out.open(encoding="utf-8"):
+            r = json.loads(line)
+            cache[(r["condition"], r["id"], r.get("response", ""))] = r
+    todo = [r for r in rows if (r["condition"], r["id"], r["response"]) not in cache]
+    fresh = {(r["condition"], r["id"]): r for r in judge_rows(todo)}
+    judged = []
+    for r in rows:
+        prev = cache.get((r["condition"], r["id"], r["response"]))
+        # keep newly collected fields (e.g. agents_spawned) and the earlier judge fields
+        judged.append({**prev, **r, **{k: v for k, v in prev.items() if k.startswith(("judge", "sweqa", "exact", "official", "final"))}}
+                      if prev else fresh[(r["condition"], r["id"])])
+    log.info("judged %d new rows, reused %d", len(todo), len(rows) - len(todo))
     out.parent.mkdir(parents=True, exist_ok=True)
     with out.open("w", encoding="utf-8") as fh:
         for r in judged:
