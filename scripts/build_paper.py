@@ -67,15 +67,18 @@ def main() -> None:
     metrics = json.loads((res / "metrics.json").read_text(encoding="utf-8"))
     tables = (res / "tables.md").read_text(encoding="utf-8")
 
-    # 1) Paper
-    tmpl = (ROOT / "reports/paper/paper_template.md").read_text(encoding="utf-8")
-    paper = fill(tmpl, metrics, tables)
+    # 1) Every report template (reports/**/<name>_template.md -> <name>.md), incl. the paper.
+    for tmpl_path in sorted((ROOT / "reports").rglob("*_template.md")):
+        if tmpl_path.name == "readme_results_template.md":
+            continue
+        target = tmpl_path.with_name(tmpl_path.name.replace("_template.md", ".md"))
+        target.write_text(fill(tmpl_path.read_text(encoding="utf-8"), metrics, tables), encoding="utf-8")
+        print("filled", target.relative_to(ROOT))
     out_md = ROOT / "reports/paper/paper.md"
-    out_md.write_text(paper, encoding="utf-8")
     pandoc = shutil.which("pandoc")
     if pandoc:
         cmd = [pandoc, str(out_md), "-o", str(ROOT / "reports/paper/paper.pdf"), "--pdf-engine=xelatex",
-               "-V", "geometry:margin=2cm", "-V", "mainfont=Calibri", "-V", "monofont=Consolas",
+               "-V", "geometry:margin=2cm", "-V", "mainfont=Cambria", "-V", "monofont=Consolas",
                "--resource-path", str(ROOT / "reports/paper")]
         r = subprocess.run(cmd, capture_output=True, text=True)
         print("pandoc:", r.returncode, r.stderr[-2000:])

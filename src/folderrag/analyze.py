@@ -317,6 +317,11 @@ def analyze_tag(tag: str) -> dict[str, Any]:
     t0 = trivial_baselines()
     metrics = {"summary": summary, "tests": tests, "sweep_vs_M": sweep, "trivial_baselines": t0,
                "exploratory_length_vs_score": length_vs_score(rows)}
+    if {"M", "B2"} <= set(summary):
+        metrics["ratios"] = {
+            "cost_M_over_B2": summary["M"]["cost_usd_per_q"] / max(summary["B2"]["cost_usd_per_q"], 1e-9),
+            "latency_M_over_B2": summary["M"]["latency_s_median"] / max(summary["B2"]["latency_s_median"], 1e-9),
+        }
     (out / "metrics.json").write_text(json.dumps(metrics, indent=2, default=float), encoding="utf-8")
     (out / "tables.md").write_text(tables_md(summary, tests, t0), encoding="utf-8")
     if summary:

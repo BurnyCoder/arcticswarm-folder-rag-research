@@ -122,7 +122,24 @@ The fork lives in the `ArcticSwarm/` submodule, branch `folder-rag`.
 - On our sample the judge agreed with exact match on {{summary.M.judge_em_agreement|pct}} of M's MultiHop-RAG answers. The disagreements are mostly label-style answers, e.g. "yes" for a gold "Align".
 
 ## 4.2 Swarm vs single agent
-RESULTS_DISCUSSION
+**MultiHop-RAG.**
+- The swarm and the single agent both reached {{summary.M.mhr_judge_acc|pct}}, with *identical* per-question outcomes.
+- Gold evidence files appeared in {{summary.M.mhr_evidence_recall|pct}} (M) and {{summary.B2.mhr_evidence_recall|pct}} (B2) of trajectories.
+- The three shared errors are therefore verdict errors on retrieved evidence: a yes/no comparison answered "no", another answered "Insufficient information", and a "Yes; No" hedge.
+- **H1 is not supported** (McNemar p = {{tests.H1.p|f3}}).
+
+**SWE-QA.**
+- The swarm scored {{summary.M.swe_mean|f1}} and the single agent {{summary.B2.swe_mean|f1}}.
+- Difference: {{tests.H3.diff|f1}} points, 95% CI {{tests.H3.ci|f1ci}}, Holm-adjusted p = {{tests.H3.p_holm|f3}}.
+- This is a significant difference **opposite** to H3, i.e. a negative result.
+- **Exploratory, post hoc:**
+  - The swarm's reports were much longer (median {{summary.M.resp_chars_median_swe|int}} vs {{summary.B2.resp_chars_median_swe|int}} characters).
+  - Length correlated negatively with score (Spearman ρ = {{exploratory_length_vs_score.spearman_rho|f2}}).
+  - The swarm's largest per-dimension gaps were on clarity ({{summary.M.swe_dims.clarity|f1}} vs {{summary.B2.swe_dims.clarity|f1}}) and relevance ({{summary.M.swe_dims.relevance|f1}} vs {{summary.B2.swe_dims.relevance|f1}}), not correctness ({{summary.M.swe_dims.correctness|f1}} vs {{summary.B2.swe_dims.correctness|f1}}).
+  - So the deficit is at least partly a report-format effect under a strict rubric.
+- **No-tool case.** In one swarm case the orchestrator answered from parametric memory without delegating any search, and the verifier gate did not catch it.
+
+**Cost.** The swarm cost {{ratios.cost_M_over_B2|f1}}× as much per question ({{summary.M.cost_usd_per_q|usd}} vs {{summary.B2.cost_usd_per_q|usd}}) and took {{ratios.latency_M_over_B2|f1}}× the median latency.
 
 ## 4.3 Agent-count sweep
 SWEEP_DISCUSSION

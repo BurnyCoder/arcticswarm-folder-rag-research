@@ -25,21 +25,16 @@ Install and run [ArcticSwarm](https://github.com/Snowflake-AI-Research/ArcticSwa
    - `budget_tokens` thinking and `temperature` both return a 400.
    - An `anthropic-workspace-id` header is required.
    - Adaptive thinking, tool loops, edited history and synthetic tool turns are all accepted; the history-editing check is not enforced on this account.
-5. [ ] Fork patches:
-   - [x] Windows compatibility.
-   - [x] Haiku 5.5 support.
-   - [x] Fix that keeps the Anthropic key away from OpenAI.
-   - [ ] Folder backend.
-   - [ ] WSL sandbox exec.
-   - [ ] Prompts and skills.
-   - [ ] LLM call log.
-   - [ ] Tests.
-6. [ ] Harness: dataset builders, run wrapper, judge, analysis, CLI.
-7. [ ] Smoke test (≤3 questions per dataset per condition) and cost check. N fixed by the user at 20 per condition (10 MultiHop-RAG + 10 SWE-QA; preregistration Amendment 1).
-8. [ ] Run M (swarm) on MultiHop-RAG, then SWE-QA. Judge, analyze, push.
-9. [ ] Run B2 (single agent) on the same ids. Judge, analyze, push.
+5. [x] Fork patches (all in `ArcticSwarm-folder-rag`, branch `folder-rag`; PR #1 merged to main).
+   - Windows compatibility, Haiku 5.5 support, fix that keeps the Anthropic key away from OpenAI.
+   - Folder backend, WSL sandbox exec, prompts and skills, LLM call log, reflection budget.
+   - Tests: 286 passed, 2 skipped.
+6. [x] Harness: dataset builders, sandbox, run wrapper, unified judge, collector, analysis, CLI. 7 offline tests.
+7. [x] Smoke test (M and B2 on 1 MultiHop-RAG and 1 SWE-QA question each). Cost: about $0.20–0.30 per question for M and about $0.005 for B2. N was fixed by the user at 20 per condition (Amendment 1).
+8. [x] Ran M (swarm) on all 20 questions, 16:06–16:56. All 5 folders exited with rc=0; there were 0 API errors in 3,704 calls.
+9. [x] Ran B2 (single agent) on the same 20 ids, 16:56–17:00. Judged, analyzed, pushed: [experiments/day1-main-vs-single-agent.md](experiments/day1-main-vs-single-agent.md).
 10. [ ] Reports, paper, README, results site. Fact-check.
-10b. [ ] Agent-count sweep (user request): swarm caps of 2, 4 and 8 subagents (`M_cap2`, `M_cap4`, `M_cap8`) after M and B2, within $50 (prereg Amendment 2).
+10b. [ ] Agent-count sweep (user request): swarm caps of 2, 4 and 8 subagents (`M_cap2`, `M_cap4`, `M_cap8`), started 17:01 concurrently, within $50 (prereg Amendment 2).
 11. Later days: B1, C1, C2, O, B3 (compute-matched voting), A1 (no code execution), plus a repeat run for variance.
 
 ## Decisions and why
