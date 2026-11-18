@@ -88,7 +88,7 @@ Pre-registered paired tests (M vs B2, Holm across H1/H3):
 - **Cost and speed.**
   - The swarm costs $0.287 per question against $0.005, which is 54.2× more.
   - It takes 317 s against 16 s (median).
-- **How many agents?** We capped the swarm at 2, 4, 8 or 32 agents.
+- **How many agents?** We ran the swarm with caps of 2, 4, 8, 16 and 32 agents, plus the single agent (1). Cap 16 is ArcticSwarm's default, so the main-method run M is the cap-16 arm.
   - With 2 or 4 agents, many questions ran into the 15-minute limit: 17 for cap 2 and 12 for cap 4, against 0 for cap 16. The orchestrator plans for about 6–9 agents, so with fewer its tasks queue.
   - MultiHop-RAG accuracy by cap: 2 → 60%, 4 → 80%, 8 → 70%, 16 → 70%, 32 → 70%.
   - SWE-QA score by cap: 2 → 34.6, 4 → 48.9, 8 → 48.2, 16 → 50.1, 32 → 52.6.
