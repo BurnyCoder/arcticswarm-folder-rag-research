@@ -1,0 +1,101 @@
+{
+  "summary": {
+    "B2": {
+      "n_mhr": 1,
+      "mhr_judge_acc": 1.0,
+      "mhr_judge_ci": [
+        0.2065493117918027,
+        1.0
+      ],
+      "mhr_em_acc": 0.0,
+      "mhr_official_overlap": 1.0,
+      "mhr_evidence_recall": 1.0,
+      "n_swe": 1,
+      "swe_mean": 40.0,
+      "swe_ci": [
+        40.0,
+        40.0
+      ],
+      "cost_usd_total": 0.009,
+      "cost_usd_per_q": 0.0043,
+      "latency_s_median": 19.21,
+      "tool_calls_mean": 6.5,
+      "code_tool_calls_mean": 3.0,
+      "agents_spawned_mean": null,
+      "errors": 0,
+      "missing_final_answer": 0,
+      "judge_em_agreement": 0.0
+    },
+    "M": {
+      "n_mhr": 1,
+      "mhr_judge_acc": 1.0,
+      "mhr_judge_ci": [
+        0.2065493117918027,
+        1.0
+      ],
+      "mhr_em_acc": 0.0,
+      "mhr_official_overlap": 1.0,
+      "mhr_evidence_recall": 1.0,
+      "n_swe": 1,
+      "swe_mean": 28.0,
+      "swe_ci": [
+        28.0,
+        28.0
+      ],
+      "cost_usd_total": 0.495,
+      "cost_usd_per_q": 0.2473,
+      "latency_s_median": 283.815,
+      "tool_calls_mean": 109.5,
+      "code_tool_calls_mean": 32.5,
+      "agents_spawned_mean": null,
+      "errors": 0,
+      "missing_final_answer": 0,
+      "judge_em_agreement": 0.0
+    }
+  },
+  "tests": {
+    "n_paired_mhr": 1,
+    "n_paired_swe": 1,
+    "H1": {
+      "x_only": 0,
+      "y_only": 0,
+      "p": 1.0,
+      "diff": 0.0,
+      "ci": [
+        0.0,
+        0.0
+      ],
+      "p_holm": 1.0,
+      "supported": false
+    },
+    "H3": {
+      "p": 1.0,
+      "diff": -12.0,
+      "ci": [
+        -12.0,
+        -12.0
+      ],
+      "p_holm": 1.0,
+      "supported": false
+    }
+  },
+  "sweep_vs_M": {},
+  "trivial_baselines": {
+    "majority_per_type": {
+      "official_overlap": 0.5539906103286385,
+      "exact_match": 0.5312989045383412,
+      "n": 2556
+    },
+    "constant_hedge": {
+      "official_overlap": 0.6431924882629108,
+      "exact_match": 0.3059467918622848,
+      "n": 2556
+    },
+    "majority_answers": {
+      "comparison_query": "yes",
+      "null_query": "insufficient information",
+      "inference_query": "sam bankman-fried",
+      "temporal_query": "yes"
+    }
+  }
+}
