@@ -1,0 +1,57 @@
+[project]
+name = "folderrag"
+version = "0.1.0"
+description = "ArcticSwarm multi-agent research adapted to retrieval-augmented generation over local folders (Claude Haiku), with a pre-registered evaluation harness."
+readme = "README.md"
+authors = [{ name = "Libor Burian" }]
+requires-python = ">=3.12"
+dependencies = [
+    # The adapted framework (git submodule, branch folder-rag) with its folder-corpus extra (bm25s).
+    "arcticswarm[folder]",
+    "anthropic",
+    "python-dotenv>=1.0",
+    "pandas>=2.2",
+    "pyarrow>=17.0",
+    "huggingface-hub>=0.26",
+    "scipy>=1.14",
+    "numpy>=2.0",
+    "matplotlib>=3.9",
+    "filelock>=3.16",
+]
+
+[project.scripts]
+folderrag = "folderrag.cli:main"
+
+[dependency-groups]
+dev = [
+    "pytest>=8.0",
+]
+
+[tool.uv]
+# Pin the framework's runtime deps to the versions ArcticSwarm validated
+# (ArcticSwarm/requirements.txt). Its pyproject only has loose lower bounds,
+# so an unconstrained resolve pulls anthropic 2.x / openai 3.x / mcp 2.x,
+# which are untested major versions for this codebase.
+constraint-dependencies = [
+    "anthropic==0.109.0",
+    "openai==2.41.0",
+    "rich==15.0.0",
+    "pyyaml==6.0.3",
+    "prompt_toolkit==3.0.52",
+    "requests==2.34.2",
+    "markitdown==0.1.6",
+    "mcp==1.27.2",
+    "pypdf==6.13.1",
+    "markdown==3.10.2",
+    "sqlparse==0.5.5",
+]
+
+[tool.uv.sources]
+arcticswarm = { path = "ArcticSwarm", editable = true }
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+
+[build-system]
+requires = ["uv_build>=0.13.6,<0.14.0"]
+build-backend = "uv_build"

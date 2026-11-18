@@ -1,0 +1,3 @@
+[submodule "ArcticSwarm"]
+	path = ArcticSwarm
+	url = https://github.com/BurnyCoder/ArcticSwarm-folder-rag.git

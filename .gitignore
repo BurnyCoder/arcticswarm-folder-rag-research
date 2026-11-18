@@ -1,0 +1,17 @@
+# secrets
+.env
+config_files.json
+settings*.local.json
+# python
+.venv/
+__pycache__/
+*.pyc
+.pytest_cache/
+# data / runs (live on D:\AI\arcticswarm-folder-rag)
+data/
+runs/
+logs/
+*.log
+# OS
+.DS_Store
+Thumbs.db
