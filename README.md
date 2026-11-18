@@ -9,7 +9,9 @@ The adaptation is evaluated with a [pre-registered](reports/preregistration.md) 
 - [MultiHop-RAG](https://arxiv.org/abs/2401.15391): 609 news articles as files, multi-hop questions.
 - [SWE-QA](https://arxiv.org/abs/2509.14635): repository-level code questions over real Python repos.
 
-> Status (2026-11-18): the framework adaptation and harness are under construction, and the preregistration is committed. No results yet.
+<!-- RESULTS:START -->
+> Status (2026-11-18): the framework adaptation, harness and preregistration are done. The day-1 runs (main method M, then baseline B2, then an agent-count sweep) are in progress.
+<!-- RESULTS:END -->
 
 ## How it works (short)
 1. **Folder corpus backend.** A new `folder` backend in ArcticSwarm walks the folder, extracts text (code, markdown, PDF, DOCX…), and splits it into line-aligned chunks. It indexes them with BM25 ([bm25s](https://github.com/xhluca/bm25s)). Agents get:
