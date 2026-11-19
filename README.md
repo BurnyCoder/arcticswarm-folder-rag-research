@@ -113,7 +113,7 @@ Pre-registered paired tests (M vs B2, Holm across H1/H3):
   - [Plan and decision log](reports/plan.md)
 - **Interactive results explorer:** https://burnycoder.github.io/arcticswarm-folder-rag-research/ (GitHub Pages, built from [`docs/index.html`](docs/index.html), which also works offline). It shows every question's answer, verdict, cost and tool use for every arm.
 - **Hugging Face:** results dataset [BurnyCoder/arcticswarm-folder-rag-results](https://huggingface.co/datasets/BurnyCoder/arcticswarm-folder-rag-results), in the collection [ArcticSwarm folder RAG](https://huggingface.co/collections/BurnyCoder/arcticswarm-folder-rag-claude-haiku-55-6afdef8c532d2dd9435b242b).
-- **Adapted framework:** `ArcticSwarm/` submodule, i.e. [BurnyCoder/ArcticSwarm-folder-rag](https://github.com/BurnyCoder/ArcticSwarm-folder-rag), branch `folder-rag` (merged to `main`). Its README lists every change.
+- **Adapted framework:** `ArcticSwarm/` submodule, i.e. [BurnyCoder/arcticswarm-folder-rag](https://github.com/BurnyCoder/arcticswarm-folder-rag), branch `folder-rag` (merged to `main`). Its README lists every change.
 
 ## Features
 - **RAG over any folder:** `folderrag ask "question" --folder <path>` answers from your files with citations.

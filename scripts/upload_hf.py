@@ -30,7 +30,7 @@ tags: [rag, multi-agent, arcticswarm, evaluation]
 
 Judged outputs, metrics, figures and reports from adapting ArcticSwarm
 (arXiv:2609.01870) to RAG over local folders with Claude Haiku 5.5. The code lives in
-the GitHub repo https://github.com/BurnyCoder/arcticswarm-folder-rag-research (framework: https://github.com/BurnyCoder/ArcticSwarm-folder-rag); interactive explorer: https://burnycoder.github.io/arcticswarm-folder-rag-research/.
+the GitHub repo https://github.com/BurnyCoder/arcticswarm-folder-rag-research (framework: https://github.com/BurnyCoder/arcticswarm-folder-rag); interactive explorer: https://burnycoder.github.io/arcticswarm-folder-rag-research/.
 
 - `data_eval/`: seeded, stratified question samples. Sources: MultiHop-RAG
   (arXiv:2401.15391, ODC-By) and SWE-QA (arXiv:2509.14635, Apache-2.0).

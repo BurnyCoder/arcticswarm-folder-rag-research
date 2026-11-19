@@ -15,7 +15,7 @@ Install and run [ArcticSwarm](https://github.com/Snowflake-AI-Research/ArcticSwa
 
 ## Repositories
 - Harness and reports: [BurnyCoder/arcticswarm-folder-rag-research](https://github.com/BurnyCoder/arcticswarm-folder-rag-research) (public since 2026-11-20), this repo.
-- Adapted framework: [BurnyCoder/ArcticSwarm-folder-rag](https://github.com/BurnyCoder/ArcticSwarm-folder-rag) (public since 2026-11-20), branch `folder-rag`, a git submodule at `./ArcticSwarm`.
+- Adapted framework: [BurnyCoder/arcticswarm-folder-rag](https://github.com/BurnyCoder/arcticswarm-folder-rag) (public since 2026-11-20), branch `folder-rag`, a git submodule at `./ArcticSwarm`.
 
 ## Work plan
 1. [x] Set up the project: uv, Python 3.12, dependencies pinned to ArcticSwarm's validated versions, private repos.
@@ -25,7 +25,7 @@ Install and run [ArcticSwarm](https://github.com/Snowflake-AI-Research/ArcticSwa
    - `budget_tokens` thinking and `temperature` both return a 400.
    - An `anthropic-workspace-id` header is required.
    - Adaptive thinking, tool loops, edited history and synthetic tool turns are all accepted; the history-editing check is not enforced on this account.
-5. [x] Fork patches (all in `ArcticSwarm-folder-rag`, branch `folder-rag`; PR #1 merged to main).
+5. [x] Fork patches (all in `arcticswarm-folder-rag`, branch `folder-rag`; PR #1 merged to main).
    - Windows compatibility, Haiku 5.5 support, fix that keeps the Anthropic key away from OpenAI.
    - Folder backend, WSL sandbox exec, prompts and skills, LLM call log, reflection budget.
    - Tests: 286 passed, 2 skipped.
@@ -50,7 +50,7 @@ Install and run [ArcticSwarm](https://github.com/Snowflake-AI-Research/ArcticSwa
 ## Decisions and why
 - **Model `claude-haiku-5-5`.** "Haiku" with no version means the current generation (Anthropic model table). Haiku 4.5 still works through the budget-thinking path.
 - **Dependency pins.** An unpinned install pulled anthropic 2.x, openai 3.x and mcp 2.x, which are untested major versions. The project pins to ArcticSwarm's `requirements.txt` versions instead.
-- **Separate repo instead of a GitHub fork.** GitHub forks of public repos cannot be private, so on day 1 `ArcticSwarm-folder-rag` was created as a private copy. It is public since 2026-11-20. The public fork `BurnyCoder/ArcticSwarm` was created before the privacy request and is unused.
+- **Separate repo instead of a GitHub fork.** GitHub forks of public repos cannot be private, so on day 1 `arcticswarm-folder-rag` was created as a private copy. It is public since 2026-11-20. The public fork `BurnyCoder/ArcticSwarm` was created before the privacy request and is unused.
 - **WSL sandbox instead of Git Bash.** The user asked that agents be able to use any bash tool and install any Python library. Docker is not installed. A dedicated WSL distro gives root plus apt/pip while isolating the host.
 - **The "browsing" profile name and the `web_search` / `web_fetch` tool names are kept.** ArcticSwarm's review gates and builder-reviewer classification are keyed on them. Descriptions and system prompts say "local folder".
 - **MultiHop-RAG scoring changed from the official word-overlap metric.** A constant hedge string scores 85.6% under it (literature review). Scoring uses a strict judge on a forced `FINAL ANSWER:` line, plus normalized exact match.
