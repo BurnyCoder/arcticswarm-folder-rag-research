@@ -11,11 +11,11 @@ Install and run [ArcticSwarm](https://github.com/Snowflake-AI-Research/ArcticSwa
   - Spend **at most $50**.
   - All other experiments (B1, C1, C2, O, B3, A1) are postponed.
 - Run order: main method → baselines → ablations.
-- The GitHub repositories and the Hugging Face collection are **private**.
+- The GitHub repositories and the Hugging Face collection were **private** on day 1. On 2026-11-20 the user made the repos public and asked for everything else to be public too: the HF dataset and collection, and the explorer on GitHub Pages.
 
 ## Repositories
-- Harness and reports: `BurnyCoder/arcticswarm-folder-rag-research` (private), this repo.
-- Adapted framework: `BurnyCoder/ArcticSwarm-folder-rag` (private), branch `folder-rag`, a git submodule at `./ArcticSwarm`.
+- Harness and reports: [BurnyCoder/arcticswarm-folder-rag-research](https://github.com/BurnyCoder/arcticswarm-folder-rag-research) (public since 2026-11-20), this repo.
+- Adapted framework: [BurnyCoder/ArcticSwarm-folder-rag](https://github.com/BurnyCoder/ArcticSwarm-folder-rag) (public since 2026-11-20), branch `folder-rag`, a git submodule at `./ArcticSwarm`.
 
 ## Work plan
 1. [x] Set up the project: uv, Python 3.12, dependencies pinned to ArcticSwarm's validated versions, private repos.
@@ -38,9 +38,9 @@ Install and run [ArcticSwarm](https://github.com/Snowflake-AI-Research/ArcticSwa
     - Per-call API latency was unchanged by the concurrency.
     - Low caps hit the 900 s budget. The 5 hard timeouts at cap 2 are scored as failures (prereg §6).
     - Report: [experiments/day1-agent-sweep.md](experiments/day1-agent-sweep.md).
-11. [x] Reports, paper (PDF), README, summary, explorer (`docs/index.html`, also published as a private claude.ai page). All numbers are filled by script.
+11. [x] Reports, paper (PDF), README, summary, explorer (`docs/index.html`, served on GitHub Pages at https://burnycoder.github.io/arcticswarm-folder-rag-research/ since 2026-11-20). All numbers are filled by script.
     - Fact-check fixes: the SWE-QA judge model statement, the judge/EM disagreement description, the cost-method wording, and the softened published-comparison claim.
-12. [x] Private Hugging Face dataset `BurnyCoder/arcticswarm-folder-rag-results`, in a private collection.
+12. [x] Hugging Face dataset [`BurnyCoder/arcticswarm-folder-rag-results`](https://huggingface.co/datasets/BurnyCoder/arcticswarm-folder-rag-results) in a collection. Both were private on day 1 and made public on 2026-11-20.
 13. Day-1 spend:
     - $24.64 in agent LLM calls (from the full call logs). This includes smoke tests ($0.48) and a `folderrag ask` test (<$0.01).
     - Judge calls are well under $1.
@@ -50,7 +50,7 @@ Install and run [ArcticSwarm](https://github.com/Snowflake-AI-Research/ArcticSwa
 ## Decisions and why
 - **Model `claude-haiku-5-5`.** "Haiku" with no version means the current generation (Anthropic model table). Haiku 4.5 still works through the budget-thinking path.
 - **Dependency pins.** An unpinned install pulled anthropic 2.x, openai 3.x and mcp 2.x, which are untested major versions. The project pins to ArcticSwarm's `requirements.txt` versions instead.
-- **Private copy instead of a fork.** GitHub forks of public repos cannot be private, so `ArcticSwarm-folder-rag` is a private copy. The public fork `BurnyCoder/ArcticSwarm` was created before the privacy request and is unused.
+- **Separate repo instead of a GitHub fork.** GitHub forks of public repos cannot be private, so on day 1 `ArcticSwarm-folder-rag` was created as a private copy. It is public since 2026-11-20. The public fork `BurnyCoder/ArcticSwarm` was created before the privacy request and is unused.
 - **WSL sandbox instead of Git Bash.** The user asked that agents be able to use any bash tool and install any Python library. Docker is not installed. A dedicated WSL distro gives root plus apt/pip while isolating the host.
 - **The "browsing" profile name and the `web_search` / `web_fetch` tool names are kept.** ArcticSwarm's review gates and builder-reviewer classification are keyed on them. Descriptions and system prompts say "local folder".
 - **MultiHop-RAG scoring changed from the official word-overlap metric.** A constant hedge string scores 85.6% under it (literature review). Scoring uses a strict judge on a forced `FINAL ANSWER:` line, plus normalized exact match.

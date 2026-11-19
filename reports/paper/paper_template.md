@@ -195,11 +195,11 @@ We adapted ArcticSwarm to RAG over local folders, with sandboxed code execution 
 - **Agent-count sweep.** No swarm size beat the single agent. Caps below the orchestrator's natural team size of about 6–7 agents caused time-limit failures, and caps above it had no effect.
 - **Practical advice for folder RAG with a small model:** start with a single code-capable agent.
 
-The fork, harness, preregistration and all judged outputs are released (privately) for replication and extension.
+The fork (https://github.com/BurnyCoder/ArcticSwarm-folder-rag), the harness, preregistration and reports (https://github.com/BurnyCoder/arcticswarm-folder-rag-research), all judged outputs (https://huggingface.co/datasets/BurnyCoder/arcticswarm-folder-rag-results) and an interactive explorer (https://burnycoder.github.io/arcticswarm-folder-rag-research/) are released publicly for replication and extension.
 
 # Appendix A. Reproducibility
 - **Code and settings.**
-  - Commands: `folderrag prepare`, `folderrag run M`, `folderrag run B2`, `folderrag run M_cap{2,4,8}`, `folderrag judge`, `folderrag analyze`, then `python scripts/build_paper.py`.
+  - Commands: `folderrag prepare`, `folderrag run M`, `folderrag run B2`, `folderrag run M_cap{2,4,8,32}`, `folderrag judge`, `folderrag analyze`, then `python scripts/build_paper.py`.
   - Everything is pinned in `uv.lock`, the fork commit in the submodule, and `ArcticSwarm/conf/bench/folder_rag.yaml`.
 - **Logs.** Raw runs, trajectories and full LLM-call logs are under `D:\AI\arcticswarm-folder-rag\runs` and `\logs`. Judged outputs are in `results/day1/judged.jsonl`.
 
